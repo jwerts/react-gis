@@ -3,6 +3,7 @@
 
 import EsriMap from "./EsriMap";
 import Hello from "./Hello";
+import Coordinate from "./Coordinate";
 import { MapProvider } from "./MapContext";
 
 export default function App() {
@@ -12,6 +13,7 @@ export default function App() {
         <Hello />
       </div>
       <EsriMap />
+      <Coordinate />
     </MapProvider>
   );
 }

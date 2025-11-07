@@ -6,12 +6,11 @@ import SimpleMarkerSymbol from "@arcgis/core/symbols/SimpleMarkerSymbol";
 import { Point } from "@arcgis/core/geometry";
 
 export default function Hello() {
-  const { map, setMap } = useMapContext();
+  const { map } = useMapContext();
   let pointSize = 5;
 
   const doSomething = () => {
     console.log('hello', map);
-    const esriMap = (map as any).map;
     const layer = new GraphicsLayer();
     const graphic = new Graphic({
       geometry: new Point({
@@ -23,7 +22,7 @@ export default function Hello() {
       })
     })
     layer.add(graphic);
-    esriMap.layers.add(layer);
+    map.layers.add(layer);
   }
 
   return (

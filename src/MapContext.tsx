@@ -8,8 +8,12 @@ declare global {
 }
 
 interface MapContextType {
-  map: HTMLArcgisMapElement | null;
-  setMap: (ref: HTMLArcgisMapElement | null) => void;
+  map: any;
+  setMap: any;
+  view: any;
+  setView: any;
+  mapElement: HTMLArcgisMapElement | null;
+  setMapElement: (ref: HTMLArcgisMapElement | null) => void;
 }
 
 const MapContext = createContext<MapContextType | undefined>(undefined);
@@ -27,10 +31,12 @@ interface MapProviderProps {
 }
 
 export const MapProvider = ({ children }: MapProviderProps) => {
-  const [map, setMap] = useState<HTMLArcgisMapElement | null>(null);
+  const [mapElement, setMapElement] = useState<HTMLArcgisMapElement | null>(null);
+  const [map, setMap] = useState<any>(null);
+  const [view, setView] = useState<any>(null);
 
   return (
-    <MapContext.Provider value={{ map, setMap }}>
+    <MapContext.Provider value={{ mapElement: mapElement, setMapElement: setMapElement, map, setMap, view, setView }}>
       {children}
     </MapContext.Provider>
   );
