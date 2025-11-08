@@ -13,7 +13,9 @@ export default function App() {
         <Hello />
       </div>
       <EsriMap />
-      <Coordinate />
+      <div style={{ position: "absolute", zIndex: 99, bottom: 20, right: 15 }}>
+        <Coordinate />
+      </div>
     </MapProvider>
   );
 }

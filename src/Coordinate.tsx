@@ -1,39 +1,58 @@
 import { useEffect, useState } from "react";
 import { useMapContext } from "./MapContext";
-import GraphicsLayer from "@arcgis/core/layers/GraphicsLayer";
-import Graphic from "@arcgis/core/Graphic";
-import SimpleMarkerSymbol from "@arcgis/core/symbols/SimpleMarkerSymbol";
-import { Point } from "@arcgis/core/geometry";
 import * as reactiveUtils from "@arcgis/core/core/reactiveUtils";
 
 export default function Coordinate() {
-  const { map, view } = useMapContext();
+  const { view } = useMapContext();
 
-  const [lat, setLat] = useState<number | nullish>(null);
-  const [long, setLong] = useState<number | nullish>(null);
+  const [lat, setLat] = useState<number | null>(null);
+  const [long, setLong] = useState<number | null>(null);
+  const [scale, setScale] = useState<number | null>(null);
 
-  let pointSize = 5;
+  useEffect(() => {
+    if (!view) return;
 
-  const latitude = // /reactive tools
+    setScale(view.scale);
 
-    useEffect(() => {
-      if (!view) return;
+    const onMouseMove = (event: MouseEvent) => {
+      // Get the screen point from the mouse event
+      const screenPoint = {
+        x: event.x,
+        y: event.y
+      };
 
-      // Wait for the map to be ready
-      let handle: IHandle;
-      // map.addEventListener('arcgisViewReadyChange', (event: any) => {
-      handle = reactiveUtils.watch(() => view.center, (center) => {
-        setLat(center.latitude);
-        setLong(center.longitude);
-      })
-      // });
+      // Convert screen point to map point
+      const mapPoint = view.toMap(screenPoint);
 
-      return () => {
-        if (handle) handle.remove();
+      if (mapPoint && mapPoint.latitude != null && mapPoint.longitude != null) {
+        setLat(mapPoint.latitude);
+        setLong(mapPoint.longitude);
       }
-    }, [view]);
+    };
+
+    // Add the mousemove event listener to the view container
+    view.container?.addEventListener('mousemove', onMouseMove);
+
+    const handle = reactiveUtils.watch(() => view.scale, (scale) => {
+      setScale(scale);
+    })
+
+    // Cleanup function to remove the event listener
+    return () => {
+      view.container?.removeEventListener('mousemove', onMouseMove);
+      handle.remove();
+    };
+  }, [view]);
 
   return (
-    <div>{lat} {long}</div>
-  )
+    <div>
+      {lat !== null && long !== null ? (
+        <>
+          Lat: {lat.toFixed(6)} Long: {long.toFixed(6)} Scale: {scale?.toFixed(0)}
+        </>
+      ) : (
+        ''
+      )}
+    </div>
+  );
 }

@@ -1,3 +1,5 @@
+import Map from '@arcgis/core/Map';
+import MapView from '@arcgis/core/views/MapView';
 import { createContext, useContext, useRef, useState, ReactNode } from 'react';
 
 // Type for the ArcGIS Map web component element
@@ -8,10 +10,10 @@ declare global {
 }
 
 interface MapContextType {
-  map: any;
-  setMap: any;
-  view: any;
-  setView: any;
+  map: Map;
+  setMap: (ref: Map | null) => void;
+  view: MapView;
+  setView: (ref: MapView | null) => void;
   mapElement: HTMLArcgisMapElement | null;
   setMapElement: (ref: HTMLArcgisMapElement | null) => void;
 }
